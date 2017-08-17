@@ -17,11 +17,18 @@ class KnockerTest(BaseKnocker):
         posts = []
         posts.append(MultiLanguagePost.objects.create(
             title='first post',
+            userid='1',
             slug='first-post',
         ))
         posts.append(MultiLanguagePost.objects.create(
             title='second post',
+            userid='1',
             slug='second-post',
+        ))
+        posts.append(MultiLanguagePost.objects.create(
+            title='third post',
+            userid='1',
+            slug='third-post',
         ))
 
         for language in [get_language()]:
@@ -31,6 +38,7 @@ class KnockerTest(BaseKnocker):
                     self.assertEqual(knock_create['title'],
                                      'new {0}'.format(post._meta.verbose_name))
                     self.assertEqual(knock_create['message'], post.title)
+                    self.assertEqual(knock_create['userid'], post.userid)
                     self.assertEqual(knock_create['language'], language)
 
     def test_parler_model_attributes(self):

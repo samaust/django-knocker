@@ -20,6 +20,8 @@ class Post(KnockerModel, ModelMeta, models.Model):
     """
     title = models.CharField(_('Title'), max_length=255)
     slug = models.SlugField(_('slug'))
+    userid = models.CharField(_('userid'), max_length=30, null=True, 
+                                blank=True)
     abstract = models.TextField(_('Abstract'))
     meta_description = models.TextField(
         verbose_name=_(u'Post meta description'),
@@ -52,6 +54,9 @@ class Post(KnockerModel, ModelMeta, models.Model):
     def __unicode__(self):
         return self.title
 
+    def get_userid(self):
+        return self.userid
+    
     def get_absolute_url(self):
         return reverse('post-detail', kwargs={'slug': self.slug})
 

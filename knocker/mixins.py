@@ -20,6 +20,7 @@ class KnockerModel(object):
         'icon': 'get_knocker_icon',
         'url': 'get_absolute_url',
         'language': 'get_knocker_language',
+        'userid': 'get_knocker_userid',
     }
 
     def __init__(self, *args, **kwargs):
@@ -64,7 +65,7 @@ class KnockerModel(object):
         """
         Generic function to return the knock message.
 
-        Defaults to calling ``self.get_title``
+        Defaults to calling ``self.get_title()``
         """
         return self.get_title()
 
@@ -72,13 +73,21 @@ class KnockerModel(object):
         """
         Returns the current language.
 
-        This will call ``selg.get_current_language`` if available or the Django
+        This will call ``self.get_current_language()`` if available or the Django
         ``django.utils.translation.get_language()`` otherwise
         """
         if hasattr(self, 'get_current_language'):
             return self.get_current_language()
         else:
             return get_language()
+    
+    def get_knocker_userid(self):
+        """
+        Returns the user id.
+
+        Defaults to calling ``self.get_userid()``
+        """
+        return self.get_userid()
 
     def should_knock(self, created=False):
         """
@@ -107,5 +116,6 @@ class KnockerModel(object):
         """
         knock = self.as_knock(created)
         if knock:
-            gr = Group('knocker-{0}'.format(knock['language']))
-            gr.send({'text': json.dumps(knock)})
+            grLangUser = Group('knocker-{0}-{1}'.format(knock['language'],
+                                                        knock['userid']))
+            grLangUser.send({'text': json.dumps(knock)})
